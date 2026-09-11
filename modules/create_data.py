@@ -6,6 +6,9 @@
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+
+from graphviz import Digraph
 
 def create_stroke_data(n=1000, seed=42):
     """
@@ -215,3 +218,62 @@ def create_stroke_data(n=1000, seed=42):
     })
 
     return df
+
+
+def draw_dag():
+    """
+    Draws a directed acyclic graph (DAG) representing the causal relationships in the synthetic stroke data.
+
+    The DAG illustrates the relationships between patient characteristics, treatment assignment, and mortality outcomes.
+    """
+
+    # Create a directed graph
+    g = Digraph()
+
+    # Set graph attributes
+    g.attr(overlap='scale')
+    g.attr(sep='0.25')
+    g.attr(layout='dot') # See https://graphviz.org/docs/layouts/
+    g.attr(rankdir='LR') # Left-to-right layout
+
+    # Set node attributes
+    g.attr('node', shape='circle', fixedsize='true', width='1.4', height='1.4')
+
+    # Add nodes for patient characteristics
+    g.node("age", label="Age")
+    g.node("ethnicity", label="Ethnicity")
+    g.node("male", label="Male")
+    g.node("afib", label="Atrial\nFibrillation")
+    g.node("warfarin", label="Warfarin")
+    g.node("shoe_size", label="Shoe Size")
+    g.node("nihss", label="Stroke\nseverity\n(NIHSS)")
+    g.node("thrombolysis", label="Thrombolysis")
+    g.node("year", label="Year")
+    g.node("mortality", label="Mortality")
+
+    # Add nodes for treatment and outcome
+    g.node("thrombolysis", label="Thrombolysis" ,penwidth='2', color='red', fontname='times bold', fontcolor='Red')
+    g.node("mortality", label="Mortality")
+
+    # Add edges to represent causal relationships
+    
+    # Mortality effects
+    g.edge("age", "mortality")
+    g.edge("ethnicity", "mortality")
+    g.edge("male", "mortality")
+    g.edge("nihss", "mortality")
+    g.edge("afib", "mortality")
+    g.edge("year", "mortality")
+    g.edge("thrombolysis", "mortality", color='Red')
+
+    # Treatment effects
+    g.edge("warfarin", "thrombolysis")
+    g.edge("nihss", "thrombolysis")
+
+    # Other effects
+    g.edge("age", "afib")
+    g.edge("afib", "warfarin")
+    g.edge("age", "nihss")
+
+    # Return the graph object
+    return g
