@@ -1,0 +1,22 @@
+_build/
+
+# Folders to ignore
+temp/
+Temp/
+test/
+Test/
+.vscode/
+
+# Ignore all checkpoints folders
+**/.ipynb_checkpoints/
+
+# Ignore .pyc files
+*.pyc
+
+# Ignore PyCharm files
+.idea
+
+# Ignore cache files (stored in this folder)
+**/__pycache__/
+
+
